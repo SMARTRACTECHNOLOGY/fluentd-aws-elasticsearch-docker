@@ -1,0 +1,5 @@
+= smart cosmos fluentd-aws-es
+
+Fluentd with the
+https://github.com/atomita/fluent-plugin-aws-elasticsearch-service[aws-elasticsearch]
+output plugin.
