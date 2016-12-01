@@ -19,7 +19,7 @@ node {
   if (env.BRANCH_NAME == "master") {
     stage("publish") {
       docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-        image.push()
+        image.push(commit_id)
         image.push("master")
       }
     }
