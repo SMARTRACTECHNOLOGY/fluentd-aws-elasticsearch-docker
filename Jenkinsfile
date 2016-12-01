@@ -9,8 +9,8 @@ node {
 
   def image
 
-  sh "git rev-parse HEAD > .git/commit-id"
-  def commit_id = readFile('.git/commit-id').trim()
+  sh "grep  FROM Dockerfile | cut -d ':' -f 2 | cut -d '-' -f 1 > .tag"
+  def tag = readFile('.tag').trim()
 
   stage("build") {
     image = docker.build "smartcosmos/fluentd-aws-elasticsearch"
@@ -19,7 +19,7 @@ node {
   if (env.BRANCH_NAME == "master") {
     stage("publish") {
       docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-        image.push(commit_id)
+        image.push(tag)
         image.push("master")
       }
     }
