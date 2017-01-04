@@ -9,6 +9,7 @@ RUN apk --no-cache --update add sudo build-base ruby-dev && \
 
     sudo -u fluent gem install fluent-plugin-aws-elasticsearch-service && \
     sudo -u fluent gem install fluent-plugin-kubernetes_metadata_filter && \
+    sudo -u fluent gem install fluent-plugin-multi-format-parser && \
 
     rm -rf /home/fluent/.gem/ruby/2.3.0/cache/*.gem && sudo -u fluent gem sources -c && \
     apk del sudo build-base ruby-dev && rm -rf /var/cache/apk/*
