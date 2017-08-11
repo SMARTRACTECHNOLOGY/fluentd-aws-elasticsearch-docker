@@ -1,4 +1,4 @@
-FROM fluent/fluentd:v0.14.11-onbuild
+FROM fluent/fluentd:v0.14.20-onbuild
 
 MAINTAINER smart cosmos Core Platform Team
 WORKDIR /home/fluent
