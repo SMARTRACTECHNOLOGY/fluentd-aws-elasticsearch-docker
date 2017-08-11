@@ -1,16 +1,13 @@
 node {
 
   deleteDir()
-
   stage("Checkout") {
     checkout scm
   }
 
-
   def image
-
-  sh "grep  FROM Dockerfile | cut -d ':' -f 2 | cut -d '-' -f 1 > .tag"
-  def tag = readFile('.tag').trim()
+  def tag = sh script: "grep  FROM Dockerfile | cut -d ':' -f 2 | cut -d '-' -f 1", returnStdout: true
+  tag = tag.trim()
 
   stage("build") {
     image = docker.build "smartcosmos/fluentd-aws-elasticsearch"
@@ -20,11 +17,9 @@ node {
     stage("publish") {
       docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
         image.push(tag)
-        image.push("master")
       }
     }
   }
 
-  // remove the docker image locally
-  sh "docker rmi ${image.id}"
+  sh "docker image rm ${image.id}"
 }

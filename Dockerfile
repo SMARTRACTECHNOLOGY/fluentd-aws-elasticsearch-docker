@@ -1,20 +1,14 @@
-FROM fluent/fluentd:v0.14.11-onbuild
+FROM fluent/fluentd:v0.14.20-onbuild
 
-MAINTAINER smart cosmos Core Platform Team
+MAINTAINER Smart Cosmos Core Platform Team
 WORKDIR /home/fluent
 ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
 
 USER root
-RUN apk --no-cache --update add sudo build-base ruby-dev && \
-
-    sudo -u fluent gem install fluent-plugin-aws-elasticsearch-service && \
-    sudo -u fluent gem install fluent-plugin-kubernetes_metadata_filter && \
-    sudo -u fluent gem install fluent-plugin-multiline-parser && \
-
-    rm -rf /home/fluent/.gem/ruby/2.3.0/cache/*.gem && sudo -u fluent gem sources -c && \
-    apk del sudo build-base ruby-dev && rm -rf /var/cache/apk/*
-
-EXPOSE 24284
-
-#USER fluent
-CMD exec fluentd -c /fluentd/etc/$FLUENTD_CONF -p /fluentd/plugins $FLUENTD_OPT
+RUN apk add --update --virtual .build-deps sudo build-base ruby-dev && \
+    sudo gem install fluent-plugin-aws-elasticsearch-service && \
+    sudo gem install fluent-plugin-kubernetes_metadata_filter && \
+    sudo gem install fluent-plugin-multiline-parser && \
+    sudo gem sources --clear-all && \
+    apk del .build-deps && \
+    rm -rf /var/cache/apk/* /home/fluent/.gem/ruby/2.3.0/cache/*.gem
